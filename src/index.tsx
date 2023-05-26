@@ -1,16 +1,39 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import "./index.css";
+import { ErrorPage } from "./pages/ErrorPage";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
 import reportWebVitals from "./reportWebVitals";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
+
+// TODO : 현재 도메인이 /pwa-react-test라 반드시 붙여야하는지? 확인 필요
+const router = createBrowserRouter([
+  {
+    path: "/pwa-react-test",
+    element: <App />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/pwa-react-test/home",
+    element: <Home />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/pwa-react-test/login",
+    element: <Login />,
+    errorElement: <ErrorPage />,
+  },
+]);
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
 
