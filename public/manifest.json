@@ -27,6 +27,10 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#FFFAE8"
+  "theme_color": "#c4ea07",
+  "background_color": "#1221b0",
+  "scope": ".",
+  "lang": "en",
+  "display_override": [],
+  "categories": ["sports"]
 }
