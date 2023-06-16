@@ -1,7 +1,26 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Button from "../../components/Button";
+import { User, getUser } from "../../service/api/user";
 
 export const Home = () => {
+  const [user, setUser] = useState<User | null>(null);
+  /**
+   * TODO
+   * - 진입과 동시에 로그인된 유저의 정보를 가져온다. feat axios
+   * - 가져와서 해당정보로 화면에 그려주기
+   */
+  // TODO : 우선은 useEffect로 진입시 정보가져오게 하기
+  useEffect(() => {
+    async function getUserServer() {
+      return await getUser();
+    }
+    getUserServer();
+  }, []);
+
+  const navigate = useNavigate();
+
   return (
     <Styled.Wrapper>
       <Styled.S1>
@@ -28,7 +47,9 @@ export const Home = () => {
       </Styled.S2>
       <Styled.S3>
         <Styled.S3Btn>게임 생성하기</Styled.S3Btn>
-        <Styled.S3Btn>게임 참여하기</Styled.S3Btn>
+        <Styled.S3Btn onClick={() => navigate("/enter_game")}>
+          게임 참여하기
+        </Styled.S3Btn>
       </Styled.S3>
       <Styled.Footer>
         <Styled.FooterC1>Home</Styled.FooterC1>
