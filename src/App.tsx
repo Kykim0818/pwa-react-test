@@ -1,16 +1,15 @@
-import { Link } from "react-router-dom";
 import styled from "styled-components";
-import Button from "./components/Button";
 
 function App() {
   return (
     <Styled.Wrapper>
-      <Button>
+      <p>Test Test</p>
+      {/* <Button>
         <Link to={`home`}>Home - Profile</Link>
       </Button>
       <Button>
         <Link to={`login`}>Login</Link>
-      </Button>
+      </Button> */}
     </Styled.Wrapper>
   );
 }
