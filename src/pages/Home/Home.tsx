@@ -1,56 +1,36 @@
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Button from "../../components/Button";
 import { User, getUser } from "../../service/api/user";
+import React from "react";
 
 export const Home = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const navigate = useNavigate();
+
   /**
    * TODO
    * - 진입과 동시에 로그인된 유저의 정보를 가져온다. feat axios
    * - 가져와서 해당정보로 화면에 그려주기
    */
-  // TODO : 우선은 useEffect로 진입시 정보가져오게 하기
-  useEffect(() => {
-    async function getUserServer() {
-      return await getUser();
-    }
-    getUserServer();
-  }, []);
-
-  const navigate = useNavigate();
+  const userId = localStorage.getItem("id");
+  // exception
+  if (userId === null) {
+    navigate("/login");
+  }
 
   return (
     <Styled.Wrapper>
-      <Styled.S1>
-        <Styled.C1 />
-        <div>안녕하세요</div>
-        <Styled.S1_ID>
-          <div>드림코코넛님</div>
-          <Button>{`>`}</Button>
-        </Styled.S1_ID>
-      </Styled.S1>
-      <Styled.S2>
-        <Styled.S2Info1>
-          <div>98</div>
-          <div>필드</div>
-        </Styled.S2Info1>
-        <Styled.S2Info1>
-          <div>98</div>
-          <div>스크린</div>
-        </Styled.S2Info1>
-        <Styled.S2Info1>
-          <div>10,000원</div>
-          <div>누적 내기 금액</div>
-        </Styled.S2Info1>
-      </Styled.S2>
-      <Styled.S3>
-        <Styled.S3Btn>게임 생성하기</Styled.S3Btn>
-        <Styled.S3Btn onClick={() => navigate("/enter_game")}>
-          게임 참여하기
-        </Styled.S3Btn>
-      </Styled.S3>
+      <Styled.Top>GOLF BET</Styled.Top>
+      <Suspense fallback={<p>Loading...</p>}>
+        <UserInfoSection userRes={getUser(userId!)} />
+        <Styled.S3>
+          <Styled.S3Btn>게임 생성하기</Styled.S3Btn>
+          <Styled.S3Btn onClick={() => navigate("/enter_game")}>
+            게임 참여하기
+          </Styled.S3Btn>
+        </Styled.S3>
+      </Suspense>
       <Styled.Footer>
         <Styled.FooterC1>Home</Styled.FooterC1>
         <Styled.FooterB>left</Styled.FooterB>
@@ -60,12 +40,49 @@ export const Home = () => {
   );
 };
 
+const UserInfoSection = ({ userRes }: { userRes: any }) => {
+  const user: User = userRes?.read();
+  return (
+    <React.Fragment>
+      <Styled.S1>
+        <img src={user.imgSrc} alt="no images" />
+        <Styled.S1_ID>
+          <div>{user.id} 님</div>
+        </Styled.S1_ID>
+      </Styled.S1>
+      <Styled.S2>
+        <Styled.S2Info1>
+          <div>{user.fieldGameCount}</div>
+          <div>필드</div>
+        </Styled.S2Info1>
+        <Styled.S2Info1>
+          <div>{user.screenGameCount}</div>
+          <div>스크린</div>
+        </Styled.S2Info1>
+        <Styled.S2Info1>
+          <div>{user.moneySum}원</div>
+          <div>누적 내기 금액</div>
+        </Styled.S2Info1>
+      </Styled.S2>
+    </React.Fragment>
+  );
+};
+
 const Styled = {
   Wrapper: styled.div`
     display: flex;
     flex-grow: 1;
     flex-direction: column;
     align-items: center;
+  `,
+  Top: styled.div`
+    display: flex;
+
+    // TODO: typo 대체
+    font-size: 25px;
+    font-weight: 700;
+    line-height: 34.05px;
+    color: var(--color-main-dark, #006977);
   `,
   S1: styled.div`
     display: flex;
