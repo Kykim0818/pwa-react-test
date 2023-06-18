@@ -5,10 +5,12 @@ import { color } from "./color";
 // 위에서 받은 `normalize`로 기본 css가 초기화 합니다.
 const GlobalStyle = createGlobalStyle`
   ${normalize}
+  #root,
   html,
   body {
     ${color}
     overflow: hidden;
+    height: 100vh;
   }
 
   * {

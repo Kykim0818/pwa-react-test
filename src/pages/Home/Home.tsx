@@ -71,7 +71,7 @@ const UserInfoSection = ({ userRes }: { userRes: any }) => {
 const Styled = {
   Wrapper: styled.div`
     display: flex;
-    flex-grow: 1;
+    height: 100%;
     flex-direction: column;
     align-items: center;
   `,

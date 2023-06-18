@@ -52,7 +52,9 @@ export const Login = () => {
 
 const Styled = {
   Wrapper: styled.div`
+    // 화면 마다 지정
     display: flex;
+    height: 100%;
     justify-content: center;
     align-items: center;
     flex-direction: column;
