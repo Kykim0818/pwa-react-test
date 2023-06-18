@@ -32,7 +32,7 @@ const mockUserInfo = {
   id: "TEST",
   imgSrc: process.env.PUBLIC_URL + "/assets/images/profile_test_img.png",
   moneySum: 100000,
-  fieldGameCount: 50,
+  fieldGameCount: 0,
   screenGameCount: 30,
   status: null,
 };

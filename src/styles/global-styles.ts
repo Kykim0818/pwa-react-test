@@ -9,7 +9,7 @@ const GlobalStyle = createGlobalStyle`
   html,
   body {
     ${color}
-    overflow: hidden;
+    overflow: auto;
     height: 100vh;
   }
 

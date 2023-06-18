@@ -1,9 +1,9 @@
-import { Suspense, useEffect, useState } from "react";
+import { Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import Button from "../../components/Button";
 import { User, getUser } from "../../service/api/user";
 import React from "react";
+import { HomeImageButton } from "./HomeImageButton";
 
 export const Home = () => {
   const navigate = useNavigate();
@@ -14,10 +14,18 @@ export const Home = () => {
    * - 가져와서 해당정보로 화면에 그려주기
    */
   const userId = localStorage.getItem("id");
-  // exception
-  if (userId === null) {
-    navigate("/login");
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/");
   }
+
+  // useEffect(() => {
+  //   // exception
+  // if (userId === null) {
+  //   navigate("/");
+  // }
+  // }, [])
 
   return (
     <Styled.Wrapper>
@@ -25,16 +33,18 @@ export const Home = () => {
       <Suspense fallback={<p>Loading...</p>}>
         <UserInfoSection userRes={getUser(userId!)} />
         <Styled.S3>
-          <Styled.S3Btn>게임 생성하기</Styled.S3Btn>
-          <Styled.S3Btn onClick={() => navigate("/enter_game")}>
-            게임 참여하기
-          </Styled.S3Btn>
+          <HomeImageButton label="게임 생성하기" imgSrc={process.env.PUBLIC_URL + "/assets/images/make_game_img.png"}/>
+          <HomeImageButton label="게임 참여하기" imgSrc={process.env.PUBLIC_URL + "/assets/images/enter_game_img.png"} onClick={() => navigate("/enter_game")}/>
         </Styled.S3>
       </Suspense>
       <Styled.Footer>
-        <Styled.FooterC1>Home</Styled.FooterC1>
-        <Styled.FooterB>left</Styled.FooterB>
-        <Styled.FooterB>right</Styled.FooterB>
+        <Styled.FooterC1 onClick={handleLogout}>Logout</Styled.FooterC1>
+        <Styled.FooterB>
+          <img  src={process.env.PUBLIC_URL + '/assets/svg/bottom_bar_score.svg'} alt="no icons"/>
+        </Styled.FooterB>
+        <Styled.FooterB>
+        <img  src={process.env.PUBLIC_URL + '/assets/svg/bottom_bar_menu.svg'} alt="no icons"/>
+        </Styled.FooterB>
       </Styled.Footer>
     </Styled.Wrapper>
   );
@@ -46,22 +56,23 @@ const UserInfoSection = ({ userRes }: { userRes: any }) => {
     <React.Fragment>
       <Styled.S1>
         <img src={user.imgSrc} alt="no images" />
-        <Styled.S1_ID>
-          <div>{user.id} 님</div>
-        </Styled.S1_ID>
+        <Styled.UserName>
+          {user.id}님
+        </Styled.UserName>
       </Styled.S1>
       <Styled.S2>
         <Styled.S2Info1>
-          <div>{user.fieldGameCount}</div>
-          <div>필드</div>
+          <Styled.S2Info1Text>필드</Styled.S2Info1Text>
+          {
+            user.fieldGameCount === 0 ? <Styled.S2InfoZeroCount /> : <Styled.S2InfoNumber>{user.fieldGameCount}</Styled.S2InfoNumber>
+          }
         </Styled.S2Info1>
+        <Styled.S2Line />
         <Styled.S2Info1>
-          <div>{user.screenGameCount}</div>
-          <div>스크린</div>
-        </Styled.S2Info1>
-        <Styled.S2Info1>
-          <div>{user.moneySum}원</div>
-          <div>누적 내기 금액</div>
+        <Styled.S2Info1Text>스크린</Styled.S2Info1Text>
+          {
+            user.screenGameCount === 0 ? <Styled.S2InfoZeroCount /> : <Styled.S2InfoNumber>{user.screenGameCount}</Styled.S2InfoNumber>
+          }
         </Styled.S2Info1>
       </Styled.S2>
     </React.Fragment>
@@ -74,27 +85,43 @@ const Styled = {
     height: 100%;
     flex-direction: column;
     align-items: center;
-  `,
+    // color ?
+    background-color: var(--color-bg, #f6f8fc);
+    padding : 0px 30px;
+    // height가 510 아래면 body 120 추가 
+    @media (max-height : 510px){
+      height: calc(100% + 120px);
+    }
+  `,  
   Top: styled.div`
     display: flex;
-
+    width : 100%;
+    margin-top : 8px;
+    justify-content: flex-start;
     // TODO: typo 대체
     font-size: 25px;
     font-weight: 700;
     line-height: 34.05px;
     color: var(--color-main-dark, #006977);
   `,
+  // image,  name
   S1: styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     gap: 8px;
     margin-top: 62px;
     margin-bottom: 31px;
   `,
 
-  S1_ID: styled.div`
+  UserName: styled.div`
     display: flex;
+    //
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 25px;
+    color : var(--color-main-darker);
   `,
 
   C1: styled.div`
@@ -103,27 +130,61 @@ const Styled = {
     border-radius: 50%;
     background-color: #ffc0c0;
   `,
-
+  // 필드 , 스크린
   S2: styled.div`
     display: flex;
-    gap: 14px;
+    width: 100%;
+    height: 93px;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    margin-left: 30px;
+    margin-right: 30px;
   `,
-
+  S2Line :styled.div`
+    border: 1px solid var(--color-bg, #f6f8fc);
+    height: 81px;
+    margin-left: 60px;
+    margin-right: 60px;
+  `,
+  // 필드, 스크린 글자 및 점수 영역
   S2Info1: styled.div`
     display: flex;
-    width: 75px;
-    height: 101px;
     flex-direction: column;
     justify-content: center;
-    gap: 4px;
-    background-color: #f3f3f380;
-    border-radius: 23px;
+    align-items: center;
+   
+  `,
+  S2Info1Text: styled.div`
+    text-align: center;
+    min-width: 45px;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 17px;
+    // color?
+    color: #464646;
+    margin-bottom: 1px;
+  `,
+  S2InfoZeroCount : styled.div`
+    background-color: var(--color-main);
+    width: 17px;
+    height: 3px;
+    margin-bottom : 16.5px;
+    margin-top : 16.5px;
+  `,
+  S2InfoNumber : styled.div`
+    color: var(--color-main);
+    height : 36px;
+    font-weight: 700;
+    font-size: 25px;
+    line-height: 36px;
   `,
 
   S3: styled.div`
     display: flex;
-    gap: 22px;
-    margin-top: 55px;
+    gap: 20px;
+    margin-top: 19px;
   `,
   S3Btn: styled.div`
     width: 155px;

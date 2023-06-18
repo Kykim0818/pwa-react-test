@@ -5,13 +5,14 @@ import { ThemeProvider } from "styled-components";
 import { ErrorPage } from "./pages/ErrorPage";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import { loginLoader } from "./pages/Login/Login";
 import reportWebVitals from "./reportWebVitals";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import GlobalStyle from "./styles/global-styles";
 import { theme } from "./styles/theme";
 import EnterGame from "./pages/EnterGame";
-import axios from "axios";
+import { loginLoader } from "./pages/Login/Login";
+
+
 
 // TODO : 현재 도메인이 /pwa-react-test라 반드시 붙여야하는지? 확인 필요
 const router = createBrowserRouter(
@@ -19,6 +20,7 @@ const router = createBrowserRouter(
     {
       path: "/",
       element: <Login />,
+      // ISSUE: loader 사용시에 해당 페이지로 라우팅시에 이전페이지가 다시 렌더 되고 이동함 
       loader: loginLoader,
       errorElement: <ErrorPage />,
     },

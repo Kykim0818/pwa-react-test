@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { LOGIN } from "../../service/login/constant";
@@ -17,10 +17,13 @@ export async function loginLoader() {
 export const Login = () => {
   const navigate = useNavigate();
   const ret: any = useLoaderData() as ReturnType<typeof loginLoader>;
+  // const ret = {
+  //   token : null
+  // }
 
   //
   useEffect(() => {
-    if (ret.token !== null) {
+    if (ret.token !== null || localStorage.getItem('token') !== null) {
       navigate("/home");
     }
   }, [ret.token, navigate]);
@@ -36,17 +39,19 @@ export const Login = () => {
   };
 
   return (
-    <Styled.Wrapper>
-      <Styled.Img
-        src={process.env.PUBLIC_URL + "/assets/images/login_img.png"}
-        alt="no images"
-      />
-      <Styled.AppName>GOLF BET</Styled.AppName>
-      <Styled.BtnGroup>
-        <button onClick={handleKakaoLogin}>Kakao login</button>
-        <button onClick={handleTestLogin}>Test login</button>
-      </Styled.BtnGroup>
-    </Styled.Wrapper>
+    <Suspense fallback={<p>Loading...</p>}>
+      <Styled.Wrapper>
+        <Styled.Img
+          src={process.env.PUBLIC_URL + "/assets/images/login_img.png"}
+          alt="no images"
+        />
+        <Styled.AppName>GOLF BET</Styled.AppName>
+        <Styled.BtnGroup>
+          <button onClick={handleKakaoLogin}>Kakao login</button>
+          <button onClick={handleTestLogin}>Test login</button>
+        </Styled.BtnGroup>
+      </Styled.Wrapper>
+    </Suspense>
   );
 };
 
