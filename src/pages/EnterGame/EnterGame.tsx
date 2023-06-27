@@ -1,12 +1,21 @@
 import { useState } from "react";
-import { QrReader } from "react-qr-reader";
+import QrReader from "react-qr-reader";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 export const EnterGame = () => {
-  const [data, setData] = useState<any>("No result");
-
   const navigate = useNavigate();
+  const [result, setResult] = useState("No result");
+
+  const handleError = (err: any) => {
+    console.log(err);
+  };
+
+  const handleScan = (result: any) => {
+    if (result) {
+      setResult(result);
+    }
+  };
 
   const handleBtnClick = () => {
     navigate(-1);
@@ -17,27 +26,21 @@ export const EnterGame = () => {
       <S.Title>게임 참여하기</S.Title>
       <S.Camera>
         <QrReader
-          constraints={{ facingMode: "environment" }}
-          onResult={(result, error) => {
-            if (!!result) {
-              setData(result);
-            }
-
-            if (!!error) {
-              console.info(error);
-            }
-          }}
-          containerStyle={{
-            width: "100%",
-            height: "100%",
+          className="qr__reader"
+          delay={500}
+          style={{
+            height: 329,
+            width: 272,
             borderRadius: "34px",
           }}
+          onError={handleError}
+          onScan={handleScan}
         />
         <S.Btn onClick={handleBtnClick}>X</S.Btn>
       </S.Camera>
       <S.Desc>
         게임방 QR 코드를 화면에 비추면 게임방으로 참여할 수 있습니다.
-        {data}
+        {result}
       </S.Desc>
     </S.Wrapper>
   );
@@ -66,6 +69,18 @@ const S = {
     position: relative;
     //
     margin-top: 40px;
+
+    .qr__reader {
+      > section {
+        width: 272px;
+        height: 328.601px;
+        border-radius: 34px;
+
+        > div {
+          height: 180px;
+        }
+      }
+    }
   `,
   Btn: styled.div`
     width: 50px;
