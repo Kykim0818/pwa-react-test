@@ -1,6 +1,6 @@
 {
-  "short_name": "PWA TEST",
-  "name": "PWA REACT TEST",
+  "short_name": "React App",
+  "name": "Create React App Sample",
   "icons": [
     {
       "src": "favicon.ico",
@@ -8,29 +8,18 @@
       "type": "image/x-icon"
     },
     {
-      "src": "GB192.png",
+      "src": "logo192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "GB512.png",
+      "src": "logo512.png",
       "type": "image/png",
-      "sizes": "512x512",
-      "purpose": "any"
-    },
-    {
-      "src": "GB512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
+      "sizes": "512x512"
     }
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#c4ea07",
-  "background_color": "#1221b0",
-  "scope": ".",
-  "lang": "en",
-  "display_override": [],
-  "categories": ["sports"]
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
 }
