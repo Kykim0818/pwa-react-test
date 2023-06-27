@@ -1,78 +1,97 @@
-import { Suspense } from "react";
+import { useQuery } from "@tanstack/react-query";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { User, getUser } from "../../service/api/user";
-import React from "react";
 import { HomeImageButton } from "./HomeImageButton";
 
 export const Home = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleBackPage = () => {
+      window.history.pushState({ isAppQuitPage: true }, "", "");
+    };
+    window.history.pushState({ isAppQuitPage: true }, "", "");
+    window.addEventListener("popstate", handleBackPage);
+    return () => window.removeEventListener("popstate", handleBackPage);
+  }, []);
 
   /**
    * TODO
    * - 진입과 동시에 로그인된 유저의 정보를 가져온다. feat axios
    * - 가져와서 해당정보로 화면에 그려주기
    */
-  const userId = localStorage.getItem("id");
+  const { isLoading, error, data } = useQuery(["userInfo"], () =>
+    getUser("Test")
+  );
 
   const handleLogout = () => {
     localStorage.clear();
     navigate("/");
-  }
+  };
 
-  // useEffect(() => {
-  //   // exception
-  // if (userId === null) {
-  //   navigate("/");
-  // }
-  // }, [])
-
+  if (isLoading || data === undefined) return <div>Loading ....</div>;
+  if (error) return <div>error</div>;
   return (
     <Styled.Wrapper>
       <Styled.Top>GOLF BET</Styled.Top>
-      <Suspense fallback={<p>Loading...</p>}>
-        <UserInfoSection userRes={getUser(userId!)} />
-        <Styled.S3>
-          <HomeImageButton label="게임 생성하기" imgSrc={process.env.PUBLIC_URL + "/assets/images/make_game_img.png"}/>
-          <HomeImageButton label="게임 참여하기" imgSrc={process.env.PUBLIC_URL + "/assets/images/enter_game_img.png"} onClick={() => navigate("/enter_game")}/>
-        </Styled.S3>
-      </Suspense>
+      <UserInfoSection user={data} />
+      <Styled.S3>
+        <HomeImageButton
+          label="게임 생성하기"
+          imgSrc={process.env.PUBLIC_URL + "/assets/images/make_game_img.png"}
+        />
+        <HomeImageButton
+          label="게임 참여하기"
+          imgSrc={process.env.PUBLIC_URL + "/assets/images/enter_game_img.png"}
+          onClick={() => navigate("/enter_game")}
+        />
+      </Styled.S3>
+      {/* </Suspense> */}
       <Styled.Footer>
         <Styled.FooterC1 onClick={handleLogout}>Logout</Styled.FooterC1>
         <Styled.FooterB>
-          <img  src={process.env.PUBLIC_URL + '/assets/svg/bottom_bar_score.svg'} alt="no icons"/>
+          <img
+            src={process.env.PUBLIC_URL + "/assets/svg/bottom_bar_score.svg"}
+            alt="no icons"
+          />
         </Styled.FooterB>
         <Styled.FooterB>
-        <img  src={process.env.PUBLIC_URL + '/assets/svg/bottom_bar_menu.svg'} alt="no icons"/>
+          <img
+            src={process.env.PUBLIC_URL + "/assets/svg/bottom_bar_menu.svg"}
+            alt="no icons"
+          />
         </Styled.FooterB>
       </Styled.Footer>
     </Styled.Wrapper>
   );
 };
 
-const UserInfoSection = ({ userRes }: { userRes: any }) => {
-  const user: User = userRes?.read();
+const UserInfoSection = ({ user }: { user: User }) => {
   return (
     <React.Fragment>
       <Styled.S1>
         <img src={user.imgSrc} alt="no images" />
-        <Styled.UserName>
-          {user.id}님
-        </Styled.UserName>
+        <Styled.UserName>{user.id}님</Styled.UserName>
       </Styled.S1>
       <Styled.S2>
         <Styled.S2Info1>
           <Styled.S2Info1Text>필드</Styled.S2Info1Text>
-          {
-            user.fieldGameCount === 0 ? <Styled.S2InfoZeroCount /> : <Styled.S2InfoNumber>{user.fieldGameCount}</Styled.S2InfoNumber>
-          }
+          {user.fieldGameScore === 0 ? (
+            <Styled.S2InfoZeroCount />
+          ) : (
+            <Styled.S2InfoNumber>{user.fieldGameScore}</Styled.S2InfoNumber>
+          )}
         </Styled.S2Info1>
         <Styled.S2Line />
         <Styled.S2Info1>
-        <Styled.S2Info1Text>스크린</Styled.S2Info1Text>
-          {
-            user.screenGameCount === 0 ? <Styled.S2InfoZeroCount /> : <Styled.S2InfoNumber>{user.screenGameCount}</Styled.S2InfoNumber>
-          }
+          <Styled.S2Info1Text>스크린</Styled.S2Info1Text>
+          {user.screenGameScore === 0 ? (
+            <Styled.S2InfoZeroCount />
+          ) : (
+            <Styled.S2InfoNumber>{user.screenGameScore}</Styled.S2InfoNumber>
+          )}
         </Styled.S2Info1>
       </Styled.S2>
     </React.Fragment>
@@ -87,16 +106,16 @@ const Styled = {
     align-items: center;
     // color ?
     background-color: var(--color-bg, #f6f8fc);
-    padding : 0px 30px;
-    // height가 510 아래면 body 120 추가 
-    @media (max-height : 510px){
+    padding: 0px 30px;
+    // height가 510 아래면 body 120 추가
+    @media (max-height: 510px) {
       height: calc(100% + 120px);
     }
-  `,  
+  `,
   Top: styled.div`
     display: flex;
-    width : 100%;
-    margin-top : 8px;
+    width: 100%;
+    margin-top: 8px;
     justify-content: flex-start;
     // TODO: typo 대체
     font-size: 25px;
@@ -121,7 +140,7 @@ const Styled = {
     font-weight: 500;
     font-size: 17px;
     line-height: 25px;
-    color : var(--color-main-darker);
+    color: var(--color-main-darker);
   `,
 
   C1: styled.div`
@@ -142,7 +161,7 @@ const Styled = {
     margin-left: 30px;
     margin-right: 30px;
   `,
-  S2Line :styled.div`
+  S2Line: styled.div`
     border: 1px solid var(--color-bg, #f6f8fc);
     height: 81px;
     margin-left: 60px;
@@ -154,7 +173,6 @@ const Styled = {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-   
   `,
   S2Info1Text: styled.div`
     text-align: center;
@@ -166,16 +184,16 @@ const Styled = {
     color: #464646;
     margin-bottom: 1px;
   `,
-  S2InfoZeroCount : styled.div`
+  S2InfoZeroCount: styled.div`
     background-color: var(--color-main);
     width: 17px;
     height: 3px;
-    margin-bottom : 16.5px;
-    margin-top : 16.5px;
+    margin-bottom: 16.5px;
+    margin-top: 16.5px;
   `,
-  S2InfoNumber : styled.div`
+  S2InfoNumber: styled.div`
     color: var(--color-main);
-    height : 36px;
+    height: 36px;
     font-weight: 700;
     font-size: 25px;
     line-height: 36px;

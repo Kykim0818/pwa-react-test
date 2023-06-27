@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@tanstack/react-query": "^4.29.17",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -59,6 +60,7 @@
     ]
   },
   "devDependencies": {
+    "@tanstack/eslint-plugin-query": "^5.0.0-alpha.68",
     "@types/styled-components": "^5.1.26"
   }
 }

@@ -1,5 +1,5 @@
-import { Suspense, useEffect } from "react";
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { LOGIN } from "../../service/login/constant";
 import { testAsync } from "../../utils/test-promise";
@@ -16,42 +16,47 @@ export async function loginLoader() {
 
 export const Login = () => {
   const navigate = useNavigate();
-  const ret: any = useLoaderData() as ReturnType<typeof loginLoader>;
-  // const ret = {
-  //   token : null
-  // }
+  // TODO: accessToken 으로 임시처리, 후에 로직 수정
+  const accessToken = localStorage.getItem("accessToken");
 
-  //
   useEffect(() => {
-    if (ret.token !== null || localStorage.getItem('token') !== null) {
+    if (accessToken !== null) {
       navigate("/home");
     }
-  }, [ret.token, navigate]);
+  }, [accessToken, navigate]);
+
+  useEffect(() => {
+    const handleBackPage = () => {
+      window.history.pushState({ isAppQuitPage: true }, "", "");
+    };
+    window.history.pushState({ isAppQuitPage: true }, "", "");
+    window.addEventListener("popstate", handleBackPage);
+    return () => window.removeEventListener("popstate", handleBackPage);
+  }, []);
 
   // TODO: login handling 방식에 따라 다를듯
   const handleKakaoLogin = () => {
     alert("Kakao Login");
   };
+  //
   const handleTestLogin = () => {
-    localStorage.setItem("id", LOGIN.TEST_INFO.id);
-    localStorage.setItem("token", LOGIN.TEST_INFO.token);
+    localStorage.setItem("accessToken", LOGIN.TEST_INFO.accessToken);
+    localStorage.setItem("refreshToken", LOGIN.TEST_INFO.refreshToken);
     navigate("/home");
   };
 
   return (
-    <Suspense fallback={<p>Loading...</p>}>
-      <Styled.Wrapper>
-        <Styled.Img
-          src={process.env.PUBLIC_URL + "/assets/images/login_img.png"}
-          alt="no images"
-        />
-        <Styled.AppName>GOLF BET</Styled.AppName>
-        <Styled.BtnGroup>
-          <button onClick={handleKakaoLogin}>Kakao login</button>
-          <button onClick={handleTestLogin}>Test login</button>
-        </Styled.BtnGroup>
-      </Styled.Wrapper>
-    </Suspense>
+    <Styled.Wrapper>
+      <Styled.Img
+        src={process.env.PUBLIC_URL + "/assets/images/login_img.png"}
+        alt="no images"
+      />
+      <Styled.AppName>GOLF BET</Styled.AppName>
+      <Styled.BtnGroup>
+        <button onClick={handleKakaoLogin}>Kakao login</button>
+        <button onClick={handleTestLogin}>Test login</button>
+      </Styled.BtnGroup>
+    </Styled.Wrapper>
   );
 };
 
