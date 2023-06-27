@@ -17,7 +17,7 @@ export const EnterGame = () => {
       <S.Title>게임 참여하기</S.Title>
       <S.Camera>
         <QrReader
-          constraints={{ facingMode: "user" }}
+          constraints={{ facingMode: "environment" }}
           onResult={(result, error) => {
             if (!!result) {
               setData(result);
@@ -26,6 +26,11 @@ export const EnterGame = () => {
             if (!!error) {
               console.info(error);
             }
+          }}
+          containerStyle={{
+            width: "100%",
+            height: "100%",
+            borderRadius: "34px",
           }}
         />
         <S.Btn onClick={handleBtnClick}>X</S.Btn>
