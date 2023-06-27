@@ -7,15 +7,12 @@ import { HomeImageButton } from "./HomeImageButton";
 
 export const Home = () => {
   const navigate = useNavigate();
-
+  const accessToken = localStorage.getItem("accessToken");
   useEffect(() => {
-    const handleBackPage = () => {
-      window.history.pushState({ isAppQuitPage: true }, "", "");
-    };
-    window.history.pushState({ isAppQuitPage: true }, "", "");
-    window.addEventListener("popstate", handleBackPage);
-    return () => window.removeEventListener("popstate", handleBackPage);
-  }, []);
+    if (accessToken === null) {
+      navigate("/");
+    }
+  }, [accessToken, navigate]);
 
   /**
    * TODO

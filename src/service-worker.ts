@@ -78,12 +78,4 @@ self.addEventListener("message", (event) => {
   }
 });
 
-//test
-self.addEventListener("popstate", (event: any) => {
-  if (event.state && event.state.isAppQuitPage) {
-    alert(event.state);
-    window.close();
-  }
-});
-
 // Any other custom service worker logic can go here.

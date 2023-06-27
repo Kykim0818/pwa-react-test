@@ -18,21 +18,11 @@ export const Login = () => {
   const navigate = useNavigate();
   // TODO: accessToken 으로 임시처리, 후에 로직 수정
   const accessToken = localStorage.getItem("accessToken");
-
   useEffect(() => {
     if (accessToken !== null) {
       navigate("/home");
     }
   }, [accessToken, navigate]);
-
-  useEffect(() => {
-    const handleBackPage = () => {
-      window.history.pushState({ isAppQuitPage: true }, "", "");
-    };
-    window.history.pushState({ isAppQuitPage: true }, "", "");
-    window.addEventListener("popstate", handleBackPage);
-    return () => window.removeEventListener("popstate", handleBackPage);
-  }, []);
 
   // TODO: login handling 방식에 따라 다를듯
   const handleKakaoLogin = () => {
