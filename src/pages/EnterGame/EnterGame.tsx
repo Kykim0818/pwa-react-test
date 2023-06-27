@@ -1,7 +1,11 @@
+import { useState } from "react";
+import { QrReader } from "react-qr-reader";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 export const EnterGame = () => {
+  const [data, setData] = useState<any>("No result");
+
   const navigate = useNavigate();
 
   const handleBtnClick = () => {
@@ -12,11 +16,23 @@ export const EnterGame = () => {
     <S.Wrapper>
       <S.Title>게임 참여하기</S.Title>
       <S.Camera>
-        Camera Area
+        <QrReader
+          constraints={{ facingMode: "user" }}
+          onResult={(result, error) => {
+            if (!!result) {
+              setData(result);
+            }
+
+            if (!!error) {
+              console.info(error);
+            }
+          }}
+        />
         <S.Btn onClick={handleBtnClick}>X</S.Btn>
       </S.Camera>
       <S.Desc>
         게임방 QR 코드를 화면에 비추면 게임방으로 참여할 수 있습니다.
+        {data}
       </S.Desc>
     </S.Wrapper>
   );
